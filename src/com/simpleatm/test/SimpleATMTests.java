@@ -4,62 +4,67 @@ import com.simpleatm.app.ATM_Program;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class SimpleATMTests extends ATM_Program {
 	
-	
+	//DEPOSITS TESTS
+	//
 	@Test
 	public void testDeposit(){
-	System.out.println("Method:deposit(currentBal,depositAmount)");	
-	assertEquals(true,ATM_Program.verifyDeposit(32000,ATM_Program.MAX_DEPOSIT_PER_TRANSACTION));	
+	System.out.println("Test:deposit(depositAmount)");	
+	assertTrue(ATM_Program.verifyDeposit(ATM_Program.getBalance(),ATM_Program.deposit(32000)));	
 	}
-	
-	@Test
-	public void testWithdrawal(){
-	System.out.println("Method:withdraw(currentBalance,withdrawAmount)");
-	 //assertEquals(ATM_Program.withdraw(32000,7000));
-	 assertEquals(true,ATM_Program.verifyWithdrawal(15000,ATM_Program.MAX_WITHDRAWAL_PER_TRANSACTION));
-	}
-	
-
+    //verify user cannot deposit more than 150k per day
 	@Test
 	public void testMaxDepositPerDay(){
-	System.out.println("Test Deposits:Verify User Cannot Deposit More than Max Per Day:Maximum is 150k");
-	assertEquals(false,ATM_Program.verifyDeposit(160000,ATM_Program.MAX_DEPOSIT_PER_TRANSACTION));
+	System.out.println("Test:Maximum Deposits Per Day");
+	assertFalse(ATM_Program.verifyDeposit(160000,ATM_Program.MAX_DEPOSIT_PER_DAY));
 	}
+	//verify user cannot deposit more than 40k per transaction
 	@Test
 	public void testMaxDepositPerTransaction(){
-	System.out.println("Test Deposits:Verify User Cannot Deposit More than Max Per Trans:Maximum is 40k");
-
-	assertEquals(true,ATM_Program.verifyDeposit(32000,ATM_Program.deposit(0,32000)));	
-		
+	System.out.println("Test:Maximum Deposits Per Transaction");
+	assertFalse(ATM_Program.verifyDeposit(ATM_Program.MAX_DEPOSIT_PER_TRANSACTION,ATM_Program.deposit(44000)));		
 	}
+	//Verify Maximum Deposit Frequency is 4
 	@Test
 	public void testMaxDepositFrequency(){
-	System.out.println("Test Deposits:Verify User Cannot Deposit More than Max Frequency:Maximum is 4");
-	
+	System.out.println("Test:Maximum Deposit Frequency");	
 	assertEquals(4,ATM_Program.MAX_DEPOSIT_FREQUENCY);	
 	}
 	
+	//WITHDRAWALS TESTS
+	
+	//verify user can withdraw 8K if she has 15K in account
 	@Test
-	public  void testMaxWithdrawalPerDay(){
-	System.out.println("Test Maximum Withdrawals Per Day:Maximum is 50k");
-	assertEquals(false,ATM_Program.verifyWithdrawal(75000,ATM_Program.MAX_WITHDRAWAL_PER_DAY));
+	public void testWithdrawal(){		
+	System.out.println("Test:withdraw(withdrawAmount)");	 
+	 assertTrue(ATM_Program.verifyWithdrawal(ATM_Program.getBalance(),ATM_Program.withdraw(8000)));
 	}
+	//verify user cannot withdraw more than 50k per day
+	@Test
+	public  void testMaxWithdrawalPerDay(){		
+	System.out.println("Test:Maximum Withdrawals Per Day");
+    assertEquals(false,ATM_Program.verifyWithdrawal(55000,ATM_Program.MAX_WITHDRAWAL_PER_DAY));	
+	}
+	//verify user cannot withdraw more than 20k per transaction
 	@Test
 	public  void testMaxWithdrawalPerTransaction(){
-		System.out.println("Test Maximum Withdrawals Per Transaction:Maximum is 20k");
-		assertEquals(false,ATM_Program.verifyWithdrawal(21000,ATM_Program.MAX_WITHDRAWAL_PER_TRANSACTION));
+		System.out.println("Test:Maximum Withdrawals Per Transaction");
+    assertEquals(false,ATM_Program.verifyWithdrawal(22000,ATM_Program.MAX_WITHDRAWAL_PER_TRANSACTION));		
 	}
-	
+	//Verify Maximum Withdrawal Frequency is 3
 	@Test
 	public  void testMaxWithdrawalFrequency(){
-		System.out.println("Test Maximum Withdrawals Frequency:Maximum is 3");
+		System.out.println("Test:Maximum Withdrawals Frequency");
 		assertEquals(3,ATM_Program.MAX_WITHDRAWAL_FREQUENCY);		
 	  }
-		
-	}
+
+}
 	
+
 
 
