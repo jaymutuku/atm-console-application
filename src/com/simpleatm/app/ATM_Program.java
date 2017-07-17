@@ -1,80 +1,90 @@
 package com.simpleatm.app;
 
+import com.simpleatm.exceptions.InsufficientFundsException;
+
 import java.util.Scanner;
 
 public  class ATM_Program {      
 
-        private  static final double MAX_DEPOSIT_PER_DAY = 150000.00;
-        private  static final double MAX_DEPOSIT_PER_TRANSACTION = 40000.00;    
-        private  static final  int MAX_DEPOSIT_FREQUENCY = 4;
+        private   final double MAX_DEPOSIT_PER_DAY = 150000.00;
+        private   final double MAX_DEPOSIT_PER_TRANSACTION = 40000.00;    
+        private   final  int MAX_DEPOSIT_FREQUENCY = 4;
        
-        private  static final double MAX_WITHDRAWAL_PER_DAY = 50000.00;
-        private  static final double MAX_WITHDRAWAL_PER_TRANSACTION = 20000.00;
-        private  static final int MAX_WITHDRAWAL_FREQUENCY = 3;
+        private   final double MAX_WITHDRAWAL_PER_DAY = 50000.00;
+        private   final double MAX_WITHDRAWAL_PER_TRANSACTION = 20000.00;
+        private   final int MAX_WITHDRAWAL_FREQUENCY = 3;
        
-       	public static  double totalBalance = 0.00;
+       	public   double totalBalance;
         
-        public static  double totalWithdrawAmount = 0.00;         
+        public   double totalWithdrawAmount;         
 
-        public static double totalDepositAmount = 0.00;
+        public  double totalDepositAmount;
          
         public  static Scanner input = new Scanner(System.in);
         
+        //constructor
+        public ATM_Program(){
+        	totalBalance = 0.00;
+        	totalWithdrawAmount = 0.00;
+        	totalDepositAmount = 0.00;
+        	
+        }
         
-       public static double getBalance(){
+        
+       public  double getBalance(){
          
          System.out.printf("\nCurrent Balance:%.2f\n",totalBalance);
          
          return totalBalance;
          }
 
-       public  static double getMaximumDepositPerDay(){
+       public   double getMaximumDepositPerDay(){
        System.out.printf("\nMaximum Deposit Per Day is %.2f\n",MAX_DEPOSIT_PER_DAY);
        	return MAX_DEPOSIT_PER_DAY;
        }
 
-       public  static double getMaximumDepositPerTransaction(){
+       public   double getMaximumDepositPerTransaction(){
        System.out.printf("\nMaximum Deposit Per Transaction is %.2f\n",MAX_DEPOSIT_PER_TRANSACTION);
 
         return MAX_DEPOSIT_PER_TRANSACTION;
        }
 
-       public  static int getMaximumDepositFrequency(){
+       public   int getMaximumDepositFrequency(){
 
         return MAX_DEPOSIT_FREQUENCY;
        } 
 
-       public  static double getMaximumWithdrawPerDay(){
+       public  double getMaximumWithdrawPerDay(){
         
         System.out.printf("\nMaximum Withdraw Per Day is %.2f\n",MAX_WITHDRAWAL_PER_DAY);
        	return MAX_WITHDRAWAL_PER_DAY;
        }
 
-       public  static double getMaximumWithdrawPerTransaction(){
+       public   double getMaximumWithdrawPerTransaction(){
 
        System.out.printf("\nMaximum Withdraw Per Transaction is %.2f\n",MAX_WITHDRAWAL_PER_TRANSACTION);
         return MAX_WITHDRAWAL_PER_TRANSACTION;
        }
-       public  static int getMaximumWithdrawalFrequency(){
+       public   int getMaximumWithdrawalFrequency(){
 
         return MAX_WITHDRAWAL_FREQUENCY;
        }  
 
-       public static  double getTotalWithdrawals(){    
+       public   double getTotalWithdrawals(){    
 
         System.out.printf("\nTotal Withdrawals:%.2f\n",totalWithdrawAmount);
 
         return totalWithdrawAmount;
 
        }
-       public static double getTotalDeposits(){ 
+       public  double getTotalDeposits(){ 
 
        	System.out.printf("\nTotal Deposits:%.2f\n",totalDepositAmount);
 
        	return totalDepositAmount;
        }
       
-       public  static boolean verifyDeposit(double depositAmount){       	   
+       public   boolean verifyDeposit(double depositAmount){       	   
  
        	if(depositAmount <= 0) {              
 
@@ -93,7 +103,7 @@ public  class ATM_Program {
        }
        
 
-       public  static double deposit(double depositAmount){                              	   
+       public   double deposit(double depositAmount){                              	   
        
            if(depositAmount <= 0) {
                 System.out.println("Can't Deposit non positive amounts");
@@ -122,7 +132,7 @@ public  class ATM_Program {
              return totalBalance;           
        }
 
-       public  static boolean verifyWithdraw(double withdrawAmount){   	
+       public  boolean verifyWithdraw(double withdrawAmount){   	
 
         if(withdrawAmount <=0 || withdrawAmount > totalBalance){
              
@@ -143,27 +153,31 @@ public  class ATM_Program {
             return true;
        }
        
-       public static boolean verifyBalance(double totalBalance,double totalDeposits,double totalWithdraws){      	    
+       public  boolean verifyBalance(double balance,double depositAmount,double withdrawAmount){
+    	   
+    	   balance = totalBalance;
+    	   depositAmount = totalDepositAmount;
+    	   withdrawAmount = totalWithdrawAmount;
     		   
-    	   if(!(totalBalance == deposit(totalDeposits) - withdraw(totalWithdraws))){
+    	   if(balance != depositAmount - withdrawAmount){
     		   
     		   return false; 
     		   
-    	   } 
-    	   
+    	   }
+
     	 return true;  
        }
        
    
-       public  static double withdraw(double withdrawAmount){                   	      
+       public   double withdraw(double withdrawAmount) throws InsufficientFundsException{                   	      
        
-             if(withdrawAmount <=0 || withdrawAmount > totalBalance){
-             
-                  System.out.println("Invalid input or Insufficient funds");
-
-                  return totalBalance;
+             if(withdrawAmount <=0 || withdrawAmount > totalBalance){             
+                                    
+            	 throw new InsufficientFundsException("Invalid input or Insufficient funds"); 
+                  
+                } 
 				   
-                }else if(withdrawAmount > MAX_WITHDRAWAL_PER_TRANSACTION){
+                if(withdrawAmount > MAX_WITHDRAWAL_PER_TRANSACTION){
 
                   System.out.println("Error:Withdrawal Per Transaction Limit Exceeded!");
                   
@@ -191,6 +205,8 @@ public  class ATM_Program {
 
 		  
     public static void main(String[] args) {
+    	
+    	ATM_Program atm = new ATM_Program();
 
         int menuOption; int depositCount = 0; int withdrawCount = 0;      				
 
@@ -212,16 +228,16 @@ public  class ATM_Program {
             //Balance
             case 1:
                 System.out.println("BALANCE");
-                  getBalance();
+                  atm.getBalance();
                   break;
             //Deposit	  
             case 2:                 
-                 if(depositCount >= MAX_DEPOSIT_FREQUENCY){
+                 if(depositCount >= atm.MAX_DEPOSIT_FREQUENCY){
                         System.out.println("MAXIMUM DEPOSIT FREQUENCY Reached");
 
                        } else {                     
                     System.out.println("DEPOSIT");
-                    getBalance();   
+                    atm.getBalance();   
                     System.out.print("Enter deposit amount:");
 
                     while(!input.hasNextDouble()){
@@ -230,9 +246,9 @@ public  class ATM_Program {
                      }                       
                     double amountToDeposit = input.nextDouble();
 
-                     if(verifyDeposit(amountToDeposit)){
-                     totalBalance = deposit(amountToDeposit);
-                     getTotalDeposits();
+                     if(atm.verifyDeposit(amountToDeposit)){
+                     atm.totalBalance = atm.deposit(amountToDeposit);
+                     atm.getTotalDeposits();
                      depositCount++;
                      }
                        
@@ -240,12 +256,12 @@ public  class ATM_Program {
                    break;
             //Withdraw	
             case 3:
-                  if(withdrawCount >= MAX_WITHDRAWAL_FREQUENCY){
+                  if(withdrawCount >= atm.MAX_WITHDRAWAL_FREQUENCY){
                         System.out.println("MAXIMUM WITHDRAWAL FREQUENCY Reached");
                          
                      } else {                      
                        System.out.println("WITHDRAWAL");
-                       getBalance();
+                       atm.getBalance();
                        System.out.print("Enter withdraw amount:");
                        
                      while(!input.hasNextDouble()){
@@ -253,14 +269,18 @@ public  class ATM_Program {
                          
                      }
                      double amountToWithdraw = input.nextDouble();
-                      
-                      if(verifyWithdraw(amountToWithdraw)){
-                          totalBalance = withdraw(amountToWithdraw);
+                     
+                     try {
+                      if(atm.verifyWithdraw(amountToWithdraw)){
+                          atm.totalBalance = atm.withdraw(amountToWithdraw);
                           withdrawCount++;
-                          getTotalWithdrawals();
+                          atm.getTotalWithdrawals();
                            
-                      }
-                      
+                        }
+                     }catch (InsufficientFundsException ex){
+                    	 
+                    	 System.out.println(ex.getMessage());
+                       }
                       
                     }
                     

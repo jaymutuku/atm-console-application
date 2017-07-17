@@ -1,45 +1,38 @@
-# atm-console-application
-A Simple ATM Console App
-# A Simple ATM Console Application
-This simple java console application demonstrate 4 common operations via ATM.
-That is,Deposit,Withdraw,Balance and Quit
+### A Simple ATM console program
 
-# How To Run The Application
-The simple way to run the application is via terminal.Just comment the package part i.e
-//package com.simpleatm.app;
+This simple java console program demonstrates 4 common operations via ATM.
+That is Check Balance,Deposit Money,Withdraw Money and Quit the program
 
-Compile:
-$ javac ATM_Program.java
+This program fulfils(somehow) the requirement of this exercise(exercise.pdf),found in the root of repo.
 
-Execute:
-$ java ATM_Program
+### Motivation
+Programming is Understanding-Kristen Nygaard.
+If you understand you explain.If you can't explain you don't understand!
+Program meant for a total beginner.    
 
-Otherwise you may get an error like:
-Error:Could not find or load Class ATM_Program
+### How to run the program.
 
-To fix this setup path while running the app
-e.g java -cp C:/Users/<username>/tasks/src ATM_Program
-<username> should be replace appropriately incase you're using Windows
+On windows environment,simply DOUBLE CLICK the *run-program.bat* batch file to run the program.
 
-# Running the JUnit Tests
-Add hamcrest-core-1.3.jar and junit-4.12.jar to your CLASSPATH.
-Note:You can also include them in your Environment Variables(better option).
+### How to run the unit test cases
 
-The tests are include separately in their own package.
-//package com.simpleatm.tests;
-They can be found in SimpleATMTests.java.
-The TestRunner.java simply executes them.
+On windows environment,simply DOUBLE CLICK the *run-tests.bat* batch file to run the unit tests.
 
-You can compile and execute them as:
-$ javac TestRunner.java
+### How to compile the program
+ 
+DOUBLE CLICK the *compile.bat* batch file to compile the program,exceptions and the tests.
+    
+### ToDo
+* Change the program to persist data to database
+* Include calculations for interest rates etc
+* Rewrite the program to simulate real world ATM where there is an Account for instance
+    
+### Screenshots
+![compile program](./screenshots/compile.png "Compile Program")
+![run Program](./screenshots/run-program.png "Run Program")
+![run tests](./screenshots/run-tests.png "Run Tests")
 
-$ java -cp <path to where they are located> TestRunner
-e.g java -cp C:/Users/<username>/tasks/tests TestRunner
-
-Note:Commenting on the package is just for the one running the app via termina.If using Eclipse IDE there is no need to.
-
-
-
-
-
+    
+    
+    
 
