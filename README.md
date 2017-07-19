@@ -1,9 +1,12 @@
 ### A Simple ATM console program
 
 This simple java console program demonstrates 4 common operations via ATM.
-That is Check Balance,Deposit Money,Withdraw Money and Quit the program
+* Check Balance
+* Deposit Money
+* Withdraw Money
+* Quit the program
 
-This program fulfils(somehow) the requirement of this exercise(exercise.pdf),found in the root of repo.
+This program fulfils(somehow) the requirement of this [exercise](exercise.md).
 
 ### Motivation
 Programming is Understanding-Kristen Nygaard.
@@ -23,9 +26,9 @@ On windows environment,simply DOUBLE CLICK the *run-tests.bat* batch file to run
 DOUBLE CLICK the *compile.bat* batch file to compile the program,exceptions and the tests.
     
 ### ToDo
-* Change the program to persist data to database
-* Include calculations for interest rates etc
-* Rewrite the program to simulate real world ATM where there is an Account for instance
+1. Change the program to persist data to database
+2. Include calculations for interest rates etc
+3. Rewrite the program to simulate real world ATM where there is an Account for instance
     
 ### Screenshots
 ![compile program](./screenshots/compile.png "Compile Program")
