@@ -1,7 +1,7 @@
 package com.simpleatm.test;
 
 import com.simpleatm.app.ATM_Program;
-import com.simpleatm.exceptions.InsufficientFundsException;
+
 
 
 import org.junit.Test;
