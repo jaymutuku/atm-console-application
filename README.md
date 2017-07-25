@@ -6,7 +6,7 @@ This simple java console program demonstrates 4 common operations via ATM.
 * Withdraw Money
 * Quit the program
 
-This program fulfils(somehow) the requirement of this [exercise](exercise.md).
+This program fulfils(somehow) the requirement of this [exercise](./docs/exercise.md).
 
 ### Motivation
 Programming is Understanding-Kristen Nygaard.
