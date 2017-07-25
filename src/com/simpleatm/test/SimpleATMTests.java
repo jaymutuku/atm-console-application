@@ -2,26 +2,21 @@ package com.simpleatm.test;
 
 import com.simpleatm.app.ATM_Program;
 
-
+import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+		
 
 //import org.junit.Ignore;
 
 public class SimpleATMTests {
 	
 	ATM_Program atm;
-	
-		
-	 double balance;
-	 double deposits;
-	 double withdraws;
 	
 	
 	@Before
@@ -35,9 +30,6 @@ public class SimpleATMTests {
 	
 	@After
 	public void tearDown(){
-		balance = atm.getBalance();
-		deposits = atm.getTotalDeposits();
-		withdraws = atm.getTotalWithdrawals();
 		
 		atm = null;
 		
@@ -48,130 +40,158 @@ public class SimpleATMTests {
 	//DEPOSITS	
 	
 	@Test
-	public void testDeposit(){
+	public void testDeposit()throws IOException,Exception{
 	System.out.println("1.Test:deposit(depositAmount)");	
     //this should add 5k to total balance & total deposits but since max deposit is reached,assert false
    
-	assertTrue(atm.verifyDeposit(atm.deposit(5000)));
-	
-	}
-	
-	
-	
-	@Test
-	//depositing negative figures
-	public void testDepositNonPositiveAmounts(){
-	System.out.println("10:Test:deposit negative numbers");	
-	assertFalse(atm.verifyDeposit(atm.deposit(-100)));	
-	}
+	atm.deposit(5000);
 
+	assertTrue(atm.getBalance()==5000.00);
+	
+	}
+	
+	
+	
+	@Test(expected = IOException.class)
+	//depositing negative figures
+	public void testDepositNonPositiveAmounts()throws IOException,Exception{
+	System.out.println("10:Test:deposit negative numbers");	
+	atm.deposit(-100);
+
+	assertTrue(atm.getBalance()== 0.00);
+	assertTrue(atm.getBalance()!= -100.00);	
+	}
+    
    
-	@Test
-	public void testMaximumDepositPerTransaction(){
+	@Test(expected = IOException.class)
+	public void testMaximumDepositPerTransaction()throws IOException,Exception{
 	System.out.println("3.Test:Maximum Deposits Per Transaction");	
-	assertFalse(atm.verifyDeposit(atm.deposit(41000.00)));		
+	atm.deposit(41000.00);
+
+	assertTrue(atm.getBalance()==0.00);
+
+	assertFalse(atm.getBalance()==41000.00);		
 	}
 	
 	//Verify Maximum Deposit Frequency is 4
-	@Test
-	public void testMaximumDepositFrequency(){
+	@Test(expected = IOException.class)
+	public void testMaximumDepositFrequency()throws IOException,Exception{
 	System.out.println("4.Test:Maximum Deposit Frequency");	
-	assertEquals(4,atm.getMaximumDepositFrequency());	
-	}
-
-	//WITHDRAWALS TESTS
 	
+     atm.deposit(100);
+     atm.deposit(200);
+     atm.deposit(300);
+     atm.deposit(400);
+
+     assertTrue(atm.getBalance()==1000.00);
+     //depositing 5th time
+     atm.deposit(500);
+     assertFalse(atm.getBalance()==1500.00);   
+
+	}
+     
+	//WITHDRAWALS TESTS
 	 
 	
-	@Test(expected = InsufficientFundsException.class)
-	public void testWithdrawal() throws InsufficientFundsException{		
+	@Test
+	public void testWithdrawal() throws IOException,Exception{		
 	System.out.println("5.Test:withdraw(withdrawAmount)");
 	
-		
-	assertTrue(atm.verifyWithdraw(atm.withdraw(7000)));
+	atm.deposit(10000);	
+	atm.withdraw(7000);
+
+	assertTrue(atm.getBalance()==3000.00);
 	
 	}
 	
 	
-	
-	@Test
-	public void testMaximumDepositPerDay() {
+	@Test(expected = Exception.class)
+	public void testMaximumDepositPerDay()throws IOException,Exception {
     System.out.println("Test:Maximum  Deposits Per Day ");    
     
-    atm.verifyDeposit(atm.deposit(40000));
-    atm.verifyDeposit(atm.deposit(40000));
-    atm.verifyDeposit(atm.deposit(40000));
+    atm.deposit(40000);
+    atm.deposit(40000);
+    atm.deposit(40000);
+    assertTrue(atm.getBalance()==120000.00); 
+
     //trying to deposit more 40k should return deposit per day limit error >150k
     //i.e Total Deposits = 160K
-    assertFalse(atm.verifyDeposit(atm.deposit(40000)));
-    
+    atm.deposit(40000);
+    assertFalse(atm.getBalance()==160000.00);    
     
 	}
 	
-	
-	@Test(expected = InsufficientFundsException.class)
-	public void testMaximumWithdrawalPerDay() throws InsufficientFundsException{
-    System.out.println("Test:Maximum Withdrawals Per Day ");    
-    
-    atm.verifyWithdraw(atm.withdraw(20000));    
-    atm.verifyWithdraw(atm.withdraw(20000));
+	@Test(expected = Exception.class)
+	public void testMaximumWithdrawalPerDay() throws IOException,Exception{
+    System.out.println("Test:Maximum Withdrawals Per Day ");
+
+    atm.withdraw(20000);    
+    atm.withdraw(20000);
     //i.e Total Withdraws = 60k
     //trying to withdraw more 20k should return withdraw per day limit error >50k
-    assertFalse(atm.verifyWithdraw(atm.withdraw(20000)));
+    atm.withdraw(20000);
+
+    assertTrue(atm.getBalance()==40000.00);
+
+    assertTrue(atm.getTotalWithdrawals()==60000.00);
     
 	}
 	
-	
-	
 	//verify user cannot withdraw more than 20k per transaction	
-	@Test
-	public  void testMaximumWithdrawalPerTransaction(){
+	@Test(expected = IOException.class)
+	public  void testMaximumWithdrawalPerTransaction() throws IOException,Exception{
 		System.out.println("7.Test:Maximum Withdrawals Per Transaction");
-		assertFalse("error withdraw per transaction > 20k",atm.verifyWithdraw(22000));
+
+		atm.deposit(35000);
+		atm.withdraw(22000);
+        
+		assertTrue(atm.getBalance()==35000.00);
     }
     
     
-	
 	//Verify Maximum Withdrawal Frequency is 3
-	@Test
-	public  void testMaximumWithdrawalFrequency(){
+	//Exception is expected because of insufficient funds
+	@Test(expected = IOException.class)	
+	public  void testMaximumWithdrawalFrequency()throws IOException,Exception{
 		System.out.println("8.Test:Maximum Withdrawals Frequency");
-		assertEquals(3,atm.getMaximumWithdrawalFrequency());		
-	  }
-	  	
-	  
+
+		atm.deposit(15000);
+
+		atm.withdraw(1000);
+		atm.withdraw(2000);
+		atm.withdraw(3000);
+
+        assertTrue(atm.getBalance()==9000.00);
+        //withdraw 4th time 
+		atm.withdraw(4000);
+		assertFalse(atm.getBalance()==5000.00);
+				
+	  }	  		 
 	
 	 //BALANCE TESTS
-	//verify user can withdraw if balance > withdraw amount
-	
+	//verify user can withdraw if balance > withdraw amount		
 	@Test
-	public void testBalance()throws InsufficientFundsException{
+	public void testBalanceDepositGreaterThanWithdraw() throws IOException,Exception {
 		
-		System.out.println("11.Test Balance");
-		
-		double deposit = atm.deposit(20000);
-		double withdraw = atm.withdraw(19000);
-		
-	   assertEquals(true,atm.verifyBalance(1000,deposit,withdraw));		
-			
+		System.out.println("13.Test Balance:Deposit = 4700 < Withdraw = 1300");
+
+		atm.deposit(4700);		
+		atm.withdraw(1300);
+
+		assertTrue(atm.getBalance()==3400.00);
 	}
+	//Expected IOException
+	@Test(expected = IOException.class)
+	public void testBalanceWithdrawGreaterThanDeposit()throws IOException,Exception {
 		
-	@Test
-	public void testBalanceDepositGreaterThanWithdraw() throws InsufficientFundsException {
+		System.out.println("12.Test Balance:Deposit = 1500 < Withdraw = 4000");
+
+		atm.deposit(1500);		
+		atm.withdraw(4000);
+
+		assertTrue(atm.getBalance()==0.00);
 		
-		System.out.println("13.Test Balance:Deposit = 4700 < Withdraw = 1300");		
-		
-		assertTrue(atm.verifyBalance(3400, atm.deposit(4700),atm.withdraw(1300)));
 	}
-	//Expected InsufficientFundsException
-	@Test(expected = InsufficientFundsException.class)
-	public void testBalanceWithdrawGreaterThanDeposit()throws InsufficientFundsException {
-		
-		System.out.println("12.Test Balance:Deposit = 1500 < Withdraw = 4000");		
-		
-		assertFalse(atm.verifyBalance(2500, atm.deposit(1500),atm.withdraw(4000)));
-	}
-	
 
 }
 	
